@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kata-Kata Manis</title>
+    <link rel="stylesheet" href="kata.css">
+</head>
+<body>
+
+    <!-- Musik Background -->
+    <iframe width="0" height="0" src="https://www.youtube.com/embed/kygrxgKPLCo?autoplay=1&loop=1&playlist=kygrxgKPLCo" frameborder="0" allow="autoplay"></iframe>
+
+    <div class="container">
+
+        <h1 class="title">Kata-Kata Untuk kamu yang gantengnya kelewatan ❤️</h1>
+
+        <div class="quote-box">
+            <p id="quoteText">Klik tombol dibawah untuk melihat kata-kata dari aku 😘</p>
+        </div>
+
+        <button class="btn" onclick="randomQuote()">Klik disini ganteng 💖</button>
+
+        <a href="index.html" class="back-btn">← Kembali</a>
+
+    </div>
+
+    <script>
+        const quotes = [
+            "Kamu itu seperti angka 1 dalam hidupku… selalu jadi yang pertama aku pikirin. ❤️",
+            "Kalau bahagia itu rumus, kamu variabel yang bikin hasilnya selalu indah. 😘",
+            "Hidupku sebelumnya acak banget, tapi sejak ada kamu kayak ketemu pola yang pas. 🌸",
+            "Senyummu itu kayak tanda plus—selalu nambahin moodku. 😊",
+            "Aku tuh gak jago matematika, tapi ngitung alasan suka kamu tuh gampang. 😍",
+            "Kamu itu kayak jawaban dari soal yang lama aku cari. Pas ketemu langsung “oh ini dia.” 💡",
+            "Rasanya sama kamu tuh seperti grafik naik… makin hari makin tinggi aja sayangnya. 📈",
+            "Kamu bikin hidupku stabil, gak naik turun kayak grafik error. 🌈",
+            "Kalau hatiku garis, arahnya selalu menuju kamu. ➡️",
+            "Dalam banyak pilihan, kamu tetap solusi paling masuk akal. ✅",
+            "Kalau bahagia itu angka, kamu nilainya paling tinggi. 🏆",
+            "Kamu tuh kayak titik pusat… semua langkahku pasti balik ke kamu. 🎯",
+            "Jarak kita kadang jauh, tapi hitungannya selalu bikin aku mau mendekat. 🏃‍♂️💨",
+            "Kamu itu kayak angka penting yang selalu aku pegang erat. ✨",
+            "Meski hidup kadang rumit, kamu tetap jawaban paling sederhana buat aku. 🧩",
+            "Kamu bikin semuanya terasa pas, kayak persamaan yang akhirnya seimbang. ⚖️",
+            "Sehari tanpa kamu itu kayak soal kosong—gak ada artinya. 😔",
+            "Kamu itu satu-satunya angka yang selalu aku ulang dan aku suka. 🔁💖",
+            "Kalau bahagia bisa dipetakan, kamu titik paling terang. 🌟",
+            "Aku gak butuh kalkulator buat tau kalau kamu yang aku butuhkan. 😉",
+            "Kamu tuh kayak pola yang bikin semuanya masuk akal. 🌀",
+            "Tanpa kamu, hidupku cuma angka random yang gak nyambung. 🔢❌",
+            "Kamu itu tanda kurung yang bikin hidupku rapi. 🧶",
+            "Kamu bikin hidupku terasa lengkap—gak ada yang kurang. 💎",
+            "Kamu tuh kayak jawaban yang muncul tiba-tiba tapi ternyata paling benar. 🎉",
+            "Kalau cinta itu garis, aku mau ketemu kamu di titik mana pun. 📍",
+            "Kamu bikin aku yakin bahwa beberapa hal memang cocok dari awal. 💞",
+            "Kamu itu kayak angka favorit yang gak pernah mau aku ganti. 🌹",
+            "Kamu bikin hari-hariku tambah banyak alasan buat senyum. 😄",
+            "Dari sekian banyak kemungkinan, kamu tetap hasil terbaik. 🥇",
+            "Kamu itu satu-satunya yang bikin hati ini stabil. 🏖️",
+            "Aku gak pernah yakin sama rumus, tapi aku yakin sama kamu. 💖",
+            "Kamu itu angka yang gak bisa aku hapus dari pikiranku. 📝",
+            "Kalau hatiku grafik, kamu titik tertingginya. ⛰️",
+            "Kamu bikin yang ribet jadi sederhana, cukup dengan hadir. 🌼",
+            "Kamu itu angka pasti di dunia yang kadang gak jelas. 🔒",
+            "Dari semua variabel hidupku, kamulah yang paling penting. ⭐",
+            "Kamu itu alasan kenapa hariku gak pernah “nol”. 🌞",
+            "Kalau cinta ini soal cerita, kamu jawabannya. 📖❤️",
+            "Kamu bikin aku percaya kalau yang pas itu gak perlu dicari lama. 💫",
+            "Kamu itu pola yang selalu bikin aku tenang. 🕊️",
+            "Kamu bikin aku berhenti nyari, karena kamu sudah cukup. 🌷",
+            "Kalau kamu angka, kamu angka yang gak mau aku lepas. 💌",
+            "Kamu itu satu-satunya alasan kenapa perasaanku naik terus. 🚀",
+            "Kalau aku hitung hal-hal baik dalam hidupku, kamu selalu nomor satu. 🏅",
+            "Kamu itu jawaban yang gak pernah aku sangka tapi paling aku syukuri. 🙏",
+            "Kamu bikin hidupku rapi, kayak tabel yang datanya lengkap. 📊",
+            "Kamu itu angka paling masuk akal di tengah semuanya yang kacau. 🔮",
+            "Ketemu kamu itu kayak dapet hasil yang akhirnya benar setelah salah terus. 🎯",
+            "Kamu itu solusi sederhana dari semua masalah rumitku. 🛠️",
+            "Aku selalu pengen waktu berhenti pas lagi sama kamu. ⏳💖",
+            "Kamu bikin semua hal kecil jadi terasa spesial. ✨",
+            "Aku nggak bisa lepas dari kamu, kayak fungsi yang tergantung variabel utama. 🔗",
+            "Kamu bikin hidupku penuh warna, kayak grafik pelangi. 🌈",
+            "Kamu itu jawaban yang paling aku butuhin sekarang. 💕",
+            "Kalau aku bisa bikin persamaan kebahagiaan, kamu pasti hasilnya. 📝💓",
+            "Kamu bikin aku ngerti kalau semua usaha ada hasilnya. 🎉",
+            "Kamu itu alasan aku selalu semangat tiap hari. 💪❤️",
+            "Aku mau semua waktuku habis sama kamu. 🕰️💞",
+            "Kamu bikin aku percaya kalau cinta itu simpel tapi nyata. 🌸",
+            "Kamu itu faktor utama dari semua hal baik yang aku rasa. 🌟",
+            "Kalau aku punya semua angka di dunia, aku tetap pilih kamu. 💖",
+            "Kamu itu titik terang di hari-hari gelapku. 🌅",
+            "Kamu bikin aku tenang, tapi juga deg-degan sekaligus. 😳💗",
+            "Aku pengen cerita semua hal sama kamu, kayak berbagi jawaban soal. 🗨️",
+            "Kamu bikin hidupku lebih masuk akal tanpa harus rumit. 🧩",
+            "Kamu itu variabel yang selalu aku pilih dengan pasti. ✅",
+            "Kamu bikin semua hal buruk hilang begitu kamu ada. 🌈",
+            "Kalau aku bisa mengulang hari, aku pengen selalu ketemu kamu. 🔄❤️",
+            "Kamu itu jawaban yang bikin aku senyum tiap hari. 😄💌",
+            "Aku nggak butuh rumus rumit, cukup kamu ada di sampingku. 💕",
+            "Kamu bikin semua logikaku jadi bener, karena hatiku selalu setuju sama kamu. 🧠❤️",
+            "Kamu itu satu-satunya yang bikin hidupku terasa lengkap. 💎",
+            "Kamu bikin aku pengen jadi versi terbaik untuk kamu. 🌟",
+            "Aku mau semua jalan hidupku selalu ada kamu di situ. 🛤️💖"
+        ];
+
+        function randomQuote() {
+            const text = document.getElementById("quoteText");
+            text.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+            text.classList.add("pop");
+            setTimeout(() => text.classList.remove("pop"), 500);
+        }
+    </script>
+</body>
+</html>

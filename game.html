@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andra & The Backbone 💖</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+<body>
+
+    <!-- Musik Background -->
+    <iframe width="0" height="0" src="https://www.youtube.com/embed/kygrxgKPLCo?autoplay=1&loop=1&playlist=kygrxgKPLCo" frameborder="0" allow="autoplay"></iframe>
+
+    <div class="container">
+        <h1 class="title">Choose Your Love Adventure 💞</h1>
+
+        <div class="story-box">
+            <p id="storyText">Hai sayang! Aku punya cerita untuk kita… Mau mulai petualangan cinta kita? 🌸</p>
+        </div>
+
+        <div class="buttons">
+            <button class="btn" id="choice1">Mulai 💖</button>
+        </div>
+
+        <a href="index.html" class="back-btn">← Kembali</a>
+    </div>
+
+    <script>
+        const story = {
+            start: {
+                text: "Kamu berjalan ke taman yang penuh bunga 🌷. Aku ada di sana sambil tersenyum 😘. Apa yang kamu lakukan?",
+                choices: [
+                    { text: "Dekatiku 🤗", next: "node1" },
+                    { text: "Melambaikan tangan 👋", next: "node2" }
+                ]
+            },
+            node1: {
+                text: "Aku merasa bahagia banget saat kamu mendekat ❤️. Aku kasih kamu bunga favoritmu 🌹.",
+                choices: [
+                    { text: "Terima dengan senyum 😊", next: "node3" },
+                    { text: "Peluk aku 🤗", next: "node4" }
+                ]
+            },
+            node2: {
+                text: "Aku senyum melihatmu melambaikan tangan 🌸. Tapi aku pengen lebih dekat 😳.",
+                choices: [
+                    { text: "Berjalan ke aku 🚶‍♂️", next: "node1" },
+                    { text: "Tetap di tempat 👀", next: "node5" }
+                ]
+            },
+            node3: {
+                text: "Senyummu bikin hatiku meleleh 🥰. Aku senang banget punya kamu 😘. Mau lanjut petualangan?",
+                choices: [
+                    { text: "Ya, lanjut 💞", next: "node4" },
+                    { text: "Berhenti dulu 😅", next: "end" }
+                ]
+            },
+            node4: {
+                text: "Pelukanmu membuat semua masalah hilang 🤗❤️. Aku janji selalu ada untuk kamu 💖.",
+                choices: [
+                    { text: "Aku sayang kamu 😍", next: "node6" },
+                    { text: "Aku juga 💕", next: "node6" }
+                ]
+            },
+            node5: {
+                text: "Aku merasa sedikit sedih 😔, tapi aku ngerti. Aku tunggu kamu di bangku taman 🌷.",
+                choices: [
+                    { text: "Ayo mendekat 🚶‍♂️", next: "node1" },
+                    { text: "Diam dulu 🤔", next: "node7" }
+                ]
+            },
+            node6: {
+                text: "Kita duduk di bawah pohon 🌳, ngobrol tentang hal lucu 😄.",
+                choices: [
+                    { text: "Cerita lucu 🤣", next: "node8" },
+                    { text: "Cerita kenangan 🥹", next: "node9" }
+                ]
+            },
+            node7: {
+                text: "Aku menatapmu dari jauh 😢, tapi tetap tersenyum.",
+                choices: [
+                    { text: "Aku jalan ke kamu 🏃‍♂️", next: "node1" },
+                    { text: "Aku cuma geleng kepala 🙃", next: "node10" }
+                ]
+            },
+            node8: {
+                text: "Kita ketawa bareng sampai perut sakit 😂. Hati aku makin dekat sama kamu ❤️.",
+                choices: [
+                    { text: "Peluk aku 🤗", next: "node11" },
+                    { text: "Cium pipiku 😘", next: "node12" }
+                ]
+            },
+            node9: {
+                text: "Kita bernostalgia 🥹, aku jadi makin sayang sama kamu 💕.",
+                choices: [
+                    { text: "Pegang tanganku 🤝", next: "node11" },
+                    { text: "Peluk aku 🤗", next: "node12" }
+                ]
+            },
+            node10: {
+                text: "Aku sedih 😔 tapi ngerti. Aku harap nanti kamu mau dekat lagi 🌸.",
+                choices: [
+                    { text: "Mendekat 🏃‍♂️", next: "node1" },
+                    { text: "Diam aja 😶", next: "end" }
+                ]
+            },
+            node11: {
+                text: "Pelukanmu bikin aku merasa aman 🤗❤️. Aku mau kita selalu bareng 💖.",
+                choices: [
+                    { text: "Aku juga mau 😍", next: "node13" },
+                    { text: "Aku janji 💕", next: "node13" }
+                ]
+            },
+            node12: {
+                text: "Ciuman manismu 😘 bikin aku meleleh. Aku senang punya kamu 💞.",
+                choices: [
+                    { text: "Peluk lagi 🤗", next: "node13" },
+                    { text: "Ayo jalan bareng 🚶‍♂️", next: "node14" }
+                ]
+            },
+            node13: {
+                text: "Kita duduk sambil lihat matahari terbenam 🌅. Aku ingin momen ini abadi 🥰.",
+                choices: [
+                    { text: "Aku juga 🥹", next: "node15" },
+                    { text: "Aku sayang kamu 😍", next: "node15" }
+                ]
+            },
+            node14: {
+                text: "Kita berjalan sambil ngobrol manis 💕. Aku makin cinta sama kamu 😘.",
+                choices: [
+                    { text: "Peluk aku 🤗", next: "node15" },
+                    { text: "Cium pipi 😘", next: "node15" }
+                ]
+            },
+            node15: {
+                text: "Tiba-tiba hujan gerimis 🌧️, tapi kita tetap senyum.",
+                choices: [
+                    { text: "Ajak lari bareng 🏃‍♂️💨", next: "node16" },
+                    { text: "Berteduh sambil peluk 🤗", next: "node17" }
+                ]
+            },
+            node16: {
+                text: "Kita lari-lari basah tapi bahagia 😂💞. Aku senang banget sama kamu 😘.",
+                choices: [
+                    { text: "Peluk aku 🤗", next: "node18" },
+                    { text: "Cium pipi 😘", next: "node19" }
+                ]
+            },
+            node17: {
+                text: "Pelukanmu di bawah hujan 🌧️ bikin aku meleleh 🥰. Aku gak mau lepaskan kamu 💖.",
+                choices: [
+                    { text: "Aku juga sayang kamu 😍", next: "node18" },
+                    { text: "Aku janji 💕", next: "node19" }
+                ]
+            },
+            node18: {
+                text: "Setelah hujan berhenti, muncul pelangi 🌈. Kita lihat sama-sama, hati aku makin dekat sama kamu 💞.",
+                choices: [
+                    { text: "Pegang tanganku 🤝", next: "node20" },
+                    { text: "Peluk lagi 🤗", next: "node21" }
+                ]
+            },
+            node19: {
+                text: "Aku merasa lengkap saat ada kamu di sampingku 🥰. Aku mau kita selalu bareng 💖.",
+                choices: [
+                    { text: "Aku setuju 😍", next: "node20" },
+                    { text: "Aku janji 💕", next: "node21" }
+                ]
+            },
+            node20: {
+                text: "Kita duduk di bangku taman, ngobrol sambil makan es krim 🍦😄. Hati aku senang banget ❤️.",
+                choices: [
+                    { text: "Cium pipi 😘", next: "node22" },
+                    { text: "Peluk aku 🤗", next: "node23" }
+                ]
+            },
+            node21: {
+                text: "Kamu nyender di bahuku 😌💞. Aku senang banget bisa dekat sama kamu 😘.",
+                choices: [
+                    { text: "Aku juga nyaman 🥰", next: "node22" },
+                    { text: "Aku sayang kamu 😍", next: "node23" }
+                ]
+            },
+            node22: {
+                text: "Langit mulai gelap tapi kita tetap tertawa 😄🌙. Aku mau momen ini gak berakhir 💖.",
+                choices: [
+                    { text: "Aku juga mau 😘", next: "node24" },
+                    { text: "Peluk aku 🤗", next: "node25" }
+                ]
+            },
+            node23: {
+                text: "Aku merasa sangat bahagia saat kamu dekat 🥰. Aku pengen kita selalu bareng 💕.",
+                choices: [
+                    { text: "Aku janji 😍", next: "node24" },
+                    { text: "Aku juga 💖", next: "node25" }
+                ]
+            },
+            node24: {
+                text: "Malam tiba, bintang-bintang ✨ muncul. Aku bilang aku sayang kamu banget 💞.",
+                choices: [
+                    { text: "Aku juga sayang kamu 😘", next: "node26" },
+                    { text: "Peluk aku 🤗", next: "node27" }
+                ]
+            },
+            node25: {
+                text: "Kita duduk di tepi danau, lihat refleksi cahaya bulan 🌙. Hati aku meleleh 🥰.",
+                choices: [
+                    { text: "Pegang tanganku 🤝", next: "node26" },
+                    { text: "Cium pipi 😘", next: "node27" }
+                ]
+            },
+            node26: {
+                text: "Aku bilang aku mau jaga kamu selalu ❤️. Kamu tersenyum manis 😊.",
+                choices: [
+                    { text: "Aku percaya kamu 😘", next: "node28" },
+                    { text: "Aku sayang kamu 💕", next: "node28" }
+                ]
+            },
+            node27: {
+                text: "Pelukan terakhir sebelum pulang 🤗. Aku janji selalu ada buat kamu 💖.",
+                choices: [
+                    { text: "Aku juga 💞", next: "node28" },
+                    { text: "Aku sayang kamu 😘", next: "node28" }
+                ]
+            },
+            node28: {
+                text: "Kamu berjalan pulang sambil tersenyum 😄. Aku merasa bahagia banget 💕.",
+                choices: [
+                    { text: "Main lagi 🎮", next: "start" },
+                    { text: "Selesai dulu 💤", next: "end" }
+                ]
+            },
+            end: {
+                text: "Terima kasih sudah bermain ❤️. Aku harap kamu bahagia 😘. Sampai jumpa di petualangan selanjutnya 💞",
+                choices: [
+                    { text: "Main lagi 🎮", next: "start" }
+                ]
+            }
+        };
+
+        const storyText = document.getElementById("storyText");
+        const buttonsDiv = document.querySelector(".buttons");
+
+        function showStory(nodeKey) {
+            const node = story[nodeKey];
+            storyText.innerText = node.text;
+
+            buttonsDiv.innerHTML = "";
+            node.choices.forEach(choice => {
+                const btn = document.createElement("button");
+                btn.classList.add("btn");
+                btn.innerText = choice.text;
+                btn.onclick = () => showStory(choice.next);
+                buttonsDiv.appendChild(btn);
+            });
+        }
+
+        // Start the adventure
+        showStory("start");
+    </script>
+
+</body>
+</html>

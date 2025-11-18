@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puzzle Kata Cinta 💖</title>
+<link rel="stylesheet" href="rahasia.css">
+</head>
+<body>
+
+<div class="container">
+    <h1 class="title">Puzzle Kata Cinta 💞</h1>
+
+    <p class="instruction">Susun kata-kata ini supaya jadi kalimat manis untuk aku 😘</p>
+
+    <div id="puzzleArea" class="puzzle-area"></div>
+
+    <button id="checkBtn" class="btn">Cek Jawaban ✅</button>
+    <button id="shuffleBtn" class="btn">Acak Ulang 🔄</button>
+
+    <p id="result" class="result"></p>
+
+    <a href="index.html" class="back-btn">← Kembali</a>
+</div>
+
+<script>
+// List banyak kalimat romantis (emoji di akhir)
+const sentences = [
+    "Aku selalu ingin dekat dengan kamu 😘",
+    "Kamu bikin hari-hariku lebih indah 💖",
+    "Setiap detik bersamamu berharga 🥰",
+    "Aku nggak bisa berhenti mikirin kamu 💕",
+    "Senymu bikin hatiku meleleh 🥹",
+    "Pelukanmu membuat aku tenang 😌",
+    "Aku ingin selalu jaga kamu 💞",
+    "Kamu itu hadiah terindah dalam hidupku 🎁",
+    "Aku mau kita selalu bareng selamanya 🌸",
+    "Kamu bikin aku tertawa setiap hari 😂",
+    "Aku sayang kamu lebih dari kata-kata ❤️",
+    "Bersamamu aku merasa lengkap 🥰",
+    "Aku kangen kamu tiap waktu ⏰",
+    "Momen bersamamu selalu spesial ✨",
+    "Aku ingin memelukmu terus 🤗",
+    "Kamu selalu di hatiku 💖",
+    "Aku janji selalu ada buat kamu 💕",
+    "Cintaku padamu nggak akan pernah hilang 🥰",
+    "Setiap senyummu bikin aku bahagia 😄",
+    "Kamu cahaya dalam hidupku 🌟"
+];
+
+// Ambil kalimat random
+let currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
+let words = currentSentence.split(" ");
+let shuffledWords = [...words].sort(() => Math.random() - 0.5);
+
+const puzzleArea = document.getElementById("puzzleArea");
+const result = document.getElementById("result");
+const checkBtn = document.getElementById("checkBtn");
+const shuffleBtn = document.getElementById("shuffleBtn");
+
+function renderPuzzle() {
+    puzzleArea.innerHTML = "";
+    shuffledWords.forEach((word, index) => {
+        const span = document.createElement("span");
+        span.classList.add("word");
+        span.innerText = word;
+        span.draggable = true;
+
+        span.addEventListener("dragstart", dragStart);
+        span.addEventListener("dragover", dragOver);
+        span.addEventListener("drop", drop);
+
+        puzzleArea.appendChild(span);
+    });
+    result.innerText = "";
+}
+
+// Drag & Drop
+let dragSrcIndex = null;
+
+function dragStart(e) {
+    dragSrcIndex = [...puzzleArea.children].indexOf(e.target);
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function drop(e) {
+    const dropIndex = [...puzzleArea.children].indexOf(e.target);
+    [shuffledWords[dragSrcIndex], shuffledWords[dropIndex]] = [shuffledWords[dropIndex], shuffledWords[dragSrcIndex]];
+    renderPuzzle();
+}
+
+// Cek jawaban
+checkBtn.addEventListener("click", () => {
+    if(shuffledWords.join(" ") === words.join(" ")) {
+        result.innerText = "💖 Tepat! Kamu bikin aku baper 😘";
+        result.style.color = "#ff2d75";
+        // Ambil kalimat baru setelah berhasil
+        currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
+        words = currentSentence.split(" ");
+        shuffledWords = [...words].sort(() => Math.random() - 0.5);
+        setTimeout(renderPuzzle, 1500); // otomatis ganti puzzle baru
+    } else {
+        result.innerText = "Ups 😅, coba lagi!";
+        result.style.color = "#ff5fa8";
+    }
+});
+
+// Acak ulang
+shuffleBtn.addEventListener("click", () => {
+    shuffledWords.sort(() => Math.random() - 0.5);
+    renderPuzzle();
+});
+
+renderPuzzle();
+</script>
+
+</body>
+</html>

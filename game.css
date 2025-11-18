@@ -1,0 +1,84 @@
+body {
+    background: linear-gradient(135deg, #ffcce6, #ffe6f2);
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    width: 420px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.title {
+    font-size: 2rem;
+    color: #ff5c8d;
+    margin-bottom: 20px;
+    animation: floating 3s infinite ease-in-out;
+}
+
+.story-box {
+    background: #ffffffcc;
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px #ff99c833;
+    margin-bottom: 20px;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.6;
+}
+
+.btn {
+    margin: 5px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 50px;
+    background: #ff99c8;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px #ff7ab933;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    transform: scale(1.1) rotate(2deg);
+    background: #ff5fa8;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    font-size: 1rem;
+    color: #ff2d75;
+    background: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px #ff99c855;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    transform: scale(1.1);
+    background: #ffe8f1;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floating {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
