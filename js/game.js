@@ -1,60 +1,160 @@
-let questions = [
-    "Apa hal terbaik yang terjadi hari ini?",
-    "Siapa yang membuat kamu tersenyum hari ini?",
-    "Apa yang lagi kamu pikirin sekarang?",
-    "Apa yang bikin kamu sedih akhir-akhir ini?",
-    "Hal kecil apa yang kamu syukuri hari ini?",
-    "Apa yang kamu harapkan besok?"
+// ===== HELPERS =====
+function showNotif(msg, success = true) {
+  const box = document.getElementById('notifBox');
+  box.innerText = msg;
+  box.style.background = success ? '#e0fff6' : '#ffeff5';
+  box.style.color = success ? '#1b7d66' : '#d8336d';
+  box.style.display = 'block';
+  setTimeout(() => { box.style.display = 'none'; }, 2500);
+}
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function escapeHtml(s) { return String(s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'); }
+
+// ===== INIT =====
+document.getElementById('todayLabel').innerText = new Date().toLocaleDateString();
+const PROMPTS = [
+  "Hari ini aku lagi mikirin...",
+  "Hal kecil yang bikin aku senyum hari ini adalah...",
+  "Ada sesuatu yang bikin aku sedih/kecewa: ...",
+  "Satu hal yang membuatku bangga hari ini: ...",
+  "Kalau aku harus cerita rahasiaku hari ini, itu tentang...",
+  "Sebelum tidur, yang aku rasakan adalah..."
+];
+const QUOTES = [
+  "Nulis itu cara hati bernapas. Mulai aja, gak harus sempurna.",
+  "Kamu sudah berusaha. Itu penting—dan layak diakui.",
+  "Pelan-pelan. Setiap kata sedikit membantu merapikan hari.",
+  "Tidak apa-apa lelah. Nulis itu bentuk berani untuk jujur pada diri sendiri.",
+  "Kamu penting. Cerita kamu berarti."
 ];
 
-let currentQuestion = 0;
-
-function nextQuestion() {
-    currentQuestion = (currentQuestion + 1) % questions.length;
-    document.getElementById("question").textContent = questions[currentQuestion];
+function renderPrompts() {
+  const p = document.getElementById('prompts');
+  p.innerHTML = '';
+  PROMPTS.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'prompt';
+    div.innerText = t;
+    div.onclick = () => {
+      const ta = document.getElementById('curhatText');
+      ta.value = ta.value ? ta.value + '\n\n' + t : t;
+      ta.focus();
+    };
+    p.appendChild(div);
+  });
+}
+function setRandomQuote() {
+  document.getElementById('quoteBox').innerText = QUOTES[Math.floor(Math.random() * QUOTES.length)];
 }
 
-// Simpan curhatan
+// ===== MUSIC =====
+let musicPlaying = false;
+function toggleMusic() {
+  const aud = document.getElementById('bgMusic');
+  const btn = document.getElementById('musicToggleBtn');
+  const fab = document.getElementById('musicFab');
+  if (!musicPlaying) {
+    aud.play().catch(() => { });
+    musicPlaying = true;
+    if (btn) btn.textContent = '⏸️ Pause';
+    if (fab) fab.textContent = '⏸';
+  } else {
+    aud.pause();
+    musicPlaying = false;
+    if (btn) btn.textContent = '▶️ Putar / Pause';
+    if (fab) fab.textContent = '♪';
+  }
+}
+
+// ===== STORAGE =====
+const NAME = "Ivur";
+const PASS_KEY = `curhat_pass_${NAME}`;
+const ENTRIES_KEY = `curhat_entries_${NAME}`;
+function readEntries() { const raw = localStorage.getItem(ENTRIES_KEY); return raw ? JSON.parse(raw) : []; }
+function writeEntries(arr) { localStorage.setItem(ENTRIES_KEY, JSON.stringify(arr)); }
+
+// ===== LOGIN =====
+window.addEventListener('load', () => {
+  renderPrompts();
+  setRandomQuote();
+  const hint = document.getElementById('loginHint');
+  hint.innerText = localStorage.getItem(PASS_KEY) ?
+    'Password sudah ada. Masukkan untuk membuka curhatmu.' :
+    'Belum ada password — buat password baru untuk menyimpan curhat.';
+  renderMoodStats();
+  renderBadges();
+});
+
+function login() {
+  const val = document.getElementById('passwordInput').value.trim();
+  if (!val) { showNotif('Masukkan password singkat', false); return; }
+  const stored = localStorage.getItem(PASS_KEY);
+  if (stored && stored !== val) { showNotif('Password salah!', false); return; }
+  if (!stored) { localStorage.setItem(PASS_KEY, val); showNotif('Password tersimpan!'); }
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('curhatPanel').style.display = 'block';
+  renderEntries();
+}
+
+// ===== CURHAT =====
 function saveEntry() {
-    let text = document.getElementById("curhatText").value;
-    let mood = document.getElementById("moodSelect").value;
+  const text = document.getElementById('curhatText').value.trim();
+  if (!text) { showNotif('Isi curhat dulu', false); return; }
+  const mood = document.getElementById('moodSelect').value;
+  let date = document.getElementById('dateInput').value; if (!date) date = new Date().toISOString().split('T')[0];
+  const entry = { text, mood, date, allow: false };
+  const arr = readEntries(); arr.unshift(entry); writeEntries(arr);
+  document.getElementById('curhatText').value = ''; renderEntries(); renderMoodStats(); showNotif('Curhat tersimpan!');
+}
 
-    if (text.trim() === "") {
-        alert("Tulis dulu ya 💗");
-        return;
-    }
-
-    let box = document.createElement("div");
-    box.className = "entry";
-    box.innerHTML = `
-        <p><b>Mood:</b> ${mood}</p>
-        <p>${text}</p>
-        <hr>
+function renderEntries() {
+  const list = document.getElementById('entriesList'); list.innerHTML = '';
+  const arr = readEntries();
+  arr.forEach((e, i) => {
+    const div = document.createElement('div'); div.className = 'entry';
+    div.innerHTML = `
+      <div class="meta"><div><strong>${capitalize(e.mood)}</strong> • <span class="small-muted">${e.date}</span></div>
+        <div class="control-row">
+          <button class="lock-btn" onclick="toggleAllow(${i})">${e.allow ? '✅ Izinkan Devi' : '🔒 Izinkan Devi'}</button>
+          <button class="delete-btn" onclick="deleteEntry(${i})">🗑 Hapus</button>
+        </div>
+      </div>
+      <div class="text">${escapeHtml(e.text)}</div>
     `;
-
-    document.getElementById("diaryList").prepend(box);
-    document.getElementById("curhatText").value = "";
+    list.appendChild(div);
+  });
 }
 
-// Musik
-document.getElementById("playMusic").onclick = function () {
-    let music = document.getElementById("bg-music");
-    music.play();
-};
+function toggleAllow(idx) { const arr = readEntries(); arr[idx].allow = !arr[idx].allow; writeEntries(arr); renderEntries(); }
+function deleteEntry(idx) { const arr = readEntries(); arr.splice(idx, 1); writeEntries(arr); renderEntries(); renderMoodStats(); renderBadges(); }
+function addQuick(txt) { const ta = document.getElementById('curhatText'); ta.value = ta.value ? ta.value + '\n' + txt : txt; ta.focus(); }
 
-// Love fall effect
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "💖";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
-
-    document.getElementById("hearts-container").appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 5000);
+// ===== EXPORT / EMAIL =====
+function sendEmail() {
+  const entries = readEntries().filter(e => e.allow);
+  if (entries.length === 0) { showNotif('Belum ada curhat yang diizinkan', false); return; }
+  const content = entries.map(e => `[${e.date}] (${e.mood})\n${e.text}`).join('\n\n');
+  const mailtoLink = `mailto:barrudevi803@gmail.com?subject=Curhat dari Ivur&body=${encodeURIComponent(content)}`;
+  window.location.href = mailtoLink;
 }
 
-setInterval(createHeart, 200);
+// ===== MOOD STATS =====
+function renderMoodStats() {
+  const arr = readEntries();
+  const stats = {}; arr.forEach(e => stats[e.mood] = (stats[e.mood] || 0) + 1);
+  const container = document.getElementById('moodStats'); container.innerHTML = '';
+  Object.keys(stats).forEach(k => {
+    const span = document.createElement('span'); span.className = 'pill'; span.innerText = `${capitalize(k)}: ${stats[k]}`;
+    container.appendChild(span);
+  });
+}
+
+// ===== BADGES =====
+function renderBadges() {
+  const arr = readEntries(); const container = document.getElementById('badges'); container.innerHTML = '';
+  if (arr.length >= 5) container.innerHTML += '<span class="badge">5 Curhat ✅</span>';
+  if (arr.length >= 10) container.innerHTML += '<span class="badge">10 Curhat ✅</span>';
+}
+
+// ===== CLEAR ALL =====
+function clearAllConfirm() { if (confirm('Hapus semua curhat dan password?')) { localStorage.removeItem(PASS_KEY); localStorage.removeItem(ENTRIES_KEY); location.reload(); } }
