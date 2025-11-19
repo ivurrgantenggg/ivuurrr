@@ -136,7 +136,8 @@ footer { margin-top:18px; text-align:center; color:#846b7a; font-size:0.9rem; }
       <div class="card">
         <h2>Musik & Mood Tracker</h2>
         <div style="display:flex; gap:8px; align-items:center;">
-          <audio id="bgMusic" src="audio/sempurna.mp3" loop autoplay></audio>
+          <audio id="bgMusic" src="audio/sempurna.mp3" loop></audio>
+          <button class="btn alt" onclick="toggleMusic()">▶️ Putar / Pause</button>
         </div>
         <div class="small" style="margin-top:6px;">Mood saat ini:</div>
         <div id="moodStats" class="mood-stats"></div>
@@ -149,5 +150,18 @@ footer { margin-top:18px; text-align:center; color:#846b7a; font-size:0.9rem; }
 </div>
 
 <script src="js/game.js"></script>
+<script>
+// otomatis play saat user login
+document.getElementById("loginBox").querySelector(".btn").addEventListener("click", () => {
+    const music = document.getElementById("bgMusic");
+    music.play().catch(err => console.log("Autoplay diblokir:", err));
+});
+
+function toggleMusic() {
+    const music = document.getElementById("bgMusic");
+    if (music.paused) music.play();
+    else music.pause();
+}
+</script>
 </body>
 </html>
