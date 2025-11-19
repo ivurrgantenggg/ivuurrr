@@ -1,263 +1,309 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andra & The Backbone 💖</title>
-    <link rel="stylesheet" href="css/game.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Curhat Box — Ivur (Final)</title>
+<meta name="description" content="Curhat Box privat untuk Ivur — Devi bisa baca hanya jika Ivur izinkan. Local-only.">
+<style>
+/* ===== RESET ===== */
+* { box-sizing: border-box; margin:0; padding:0; }
+html, body { height:100%; font-family: Inter, "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+body { background: linear-gradient(180deg,#fff8fb 0%, #fff2f7 100%); color:#2b2b2b; -webkit-font-smoothing: antialiased; padding:16px; }
+
+/* ===== CONTAINER ===== */
+.container { max-width:1100px; margin:0 auto; }
+header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.brand { display:flex; gap:12px; align-items:center; }
+.logo { width:56px; height:56px; border-radius:12px; background:linear-gradient(135deg,#ff6da6,#ff9dc9); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:18px; box-shadow:0 8px 20px rgba(255,109,166,0.18); }
+h1 { font-size:1.15rem; margin-bottom:2px; }
+.lead { color:#6f5f6f; font-size:0.95rem; }
+
+.layout { display:grid; grid-template-columns:1fr 360px; gap:16px; }
+@media (max-width:980px) { .layout { grid-template-columns:1fr; } }
+
+/* ===== CARDS ===== */
+.card { background:#fff; padding:14px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.06); margin-bottom:12px; }
+.section-title { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px; }
+.section-title h2 { font-size:1.02rem; margin:0; }
+.small { font-size:0.88rem; color:#7a6e7a; }
+
+/* ===== LOGIN ===== */
+#loginBox input[type="password"] { width:100%; padding:12px; border-radius:10px; border:1px solid #efe6ef; margin-top:8px; }
+.actions { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+.btn { padding:10px 12px; border-radius:10px; border:none; background:#ff6fa2; color:white; cursor:pointer; font-weight:600; }
+.btn.alt { background:#fff; border:1px solid #efe6ef; color:#333; }
+.btn.warn { background:#ff5a7d; }
+.hint { font-size:0.85rem; color:#7a6e7a; margin-top:8px; }
+.back-btn { background:#ffe6f3; color:#ff4b86; border:none; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; }
+
+/* ===== NOTIFICATION ===== */
+#notifBox { position:fixed; top:16px; left:50%; transform:translateX(-50%); background:#ffeff5; color:#d8336d; padding:12px 20px; border-radius:12px; box-shadow:0 6px 14px rgba(255,109,166,0.18); display:none; z-index:1000; }
+
+/* ===== CURHAT PANEL ===== */
+label { display:block; font-size:0.9rem; margin-top:10px; color:#5b505b; }
+textarea { width:100%; min-height:140px; padding:12px; border-radius:10px; border:1px solid #f0dfee; background:linear-gradient(180deg,#fff,#fff8fb); resize:vertical; font-size:15px; }
+select, input[type="date"] { width:100%; padding:10px; border-radius:10px; border:1px solid #efe6ef; margin-top:8px; }
+.row { display:flex; gap:8px; margin-top:10px; }
+.col { flex:1; }
+.prompts { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.prompt { background:linear-gradient(180deg,#fff,#fff8fb); padding:10px 12px; border-radius:12px; border:1px solid #ffe6f3; cursor:pointer; box-shadow:0 6px 14px rgba(255,150,190,0.08); transition: transform .15s; min-width:140px; font-size:14px; }
+.prompt:hover { transform: translateY(-4px); }
+.quote { font-style:italic; color:#6f5f6f; margin-top:8px; padding:8px; border-left:3px solid #ffb6d2; background:#fffafc; border-radius:8px; }
+#entriesList { margin-top:10px; max-height:420px; overflow:auto; padding-right:6px; }
+.entry { padding:12px; border-radius:10px; background: linear-gradient(180deg,#fff,#fff9fb); margin-bottom:10px; border:1px solid #fde7f5; box-shadow:0 6px 12px rgba(255,160,195,0.06); }
+.entry .meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; }
+.entry .text { white-space:pre-wrap; color:#333; }
+.small-muted { font-size:0.82rem; color:#7a6e7a; }
+.control-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.lock-btn { padding:8px 10px; border-radius:10px; border:1px solid #ffd7e7; background:#fff; color:#ff4b86; cursor:pointer; font-weight:600; }
+.delete-btn { padding:8px 10px; border-radius:10px; border:1px solid #ffd7e7; background:#fff; color:#e03b68; cursor:pointer; }
+.download-btn { padding:10px; border-radius:10px; border:none; background:#ff6fa2; color:#fff; cursor:pointer; }
+
+/* ===== SIDEBAR ===== */
+.sidebar .card { margin-bottom:12px; }
+.music-toggle { display:flex; gap:8px; align-items:center; }
+.music-toggle button { padding:8px 10px; border-radius:10px; border:none; background:#fff; color:#ff6fa2; border:1px solid #ffe6f3; cursor:pointer; }
+.mood-stats { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.pill { padding:8px 10px; border-radius:999px; background:#fff; border:1px solid #ffe6f3; font-weight:600; font-size:0.9rem; }
+.badges { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.badge { background:linear-gradient(90deg,#fff,#fffafc); padding:8px 10px; border-radius:10px; border:1px solid #ffe6f3; font-weight:600; color:#6a4a5a; }
+
+/* music floating (mobile) */
+.music-btn { position:fixed; bottom:18px; right:18px; background:#ff6fa2; color:white; border:none; padding:12px; border-radius:50%; box-shadow:0 6px 18px rgba(255,109,166,0.18); cursor:pointer; display:none; }
+@media (max-width:700px) { .music-btn { display:block; } .layout { grid-template-columns:1fr; } .sidebar { order:2; } }
+
+/* footer */
+footer { margin-top:18px; text-align:center; color:#846b7a; font-size:0.9rem; }
+
+/* theme variations */
+body.theme-sedih { background: linear-gradient(180deg,#f0f7ff 0%, #eef6ff 100%); }
+body.theme-bahagia { background: linear-gradient(180deg,#fffaf0 0%, #fff6ec 100%); }
+body.theme-tenang { background: linear-gradient(180deg,#f6fff9 0%, #ecfff6 100%); }
+
+/* scrollbar small */
+#entriesList::-webkit-scrollbar { width:8px; }
+#entriesList::-webkit-scrollbar-thumb { background:#ffd6e6; border-radius:8px; }
+</style>
 </head>
 <body>
-
-    <!-- Musik Background -->
-    <iframe width="0" height="0" src="https://www.youtube.com/embed/kygrxgKPLCo?autoplay=1&loop=1&playlist=kygrxgKPLCo" frameborder="0" allow="autoplay"></iframe>
-
-    <div class="container">
-        <h1 class="title">Choose Your Love Adventure 💞</h1>
-
-        <div class="story-box">
-            <p id="storyText">Hai sayang! Aku punya cerita untuk kita… Mau mulai petualangan cinta kita? 🌸</p>
-        </div>
-
-        <div class="buttons">
-            <button class="btn" id="choice1">Mulai 💖</button>
-        </div>
-
-        <a href="index.html" class="back-btn">← Kembali</a>
+<div id="notifBox"></div>
+<div class="container">
+  <header>
+    <div class="brand">
+      <div class="logo">Iv</div>
+      <div>
+        <h1>Curhat Box — Ivur</h1>
+        <div class="lead">Private diary — Devi hanya bisa baca jika Ivur izinkan. Data tersimpan di perangkatmu.</div>
+      </div>
     </div>
+    <div class="small"><div class="small-muted">Local-only · Tanpa server</div></div>
+  </header>
 
-    <script>
-        const story = {
-            start: {
-                text: "Kamu berjalan ke taman yang penuh bunga 🌷. Aku ada di sana sambil tersenyum 😘. Apa yang kamu lakukan?",
-                choices: [
-                    { text: "Dekatiku 🤗", next: "node1" },
-                    { text: "Melambaikan tangan 👋", next: "node2" }
-                ]
-            },
-            node1: {
-                text: "Aku merasa bahagia banget saat kamu mendekat ❤️. Aku kasih kamu bunga favoritmu 🌹.",
-                choices: [
-                    { text: "Terima dengan senyum 😊", next: "node3" },
-                    { text: "Peluk aku 🤗", next: "node4" }
-                ]
-            },
-            node2: {
-                text: "Aku senyum melihatmu melambaikan tangan 🌸. Tapi aku pengen lebih dekat 😳.",
-                choices: [
-                    { text: "Berjalan ke aku 🚶‍♂️", next: "node1" },
-                    { text: "Tetap di tempat 👀", next: "node5" }
-                ]
-            },
-            node3: {
-                text: "Senyummu bikin hatiku meleleh 🥰. Aku senang banget punya kamu 😘. Mau lanjut petualangan?",
-                choices: [
-                    { text: "Ya, lanjut 💞", next: "node4" },
-                    { text: "Berhenti dulu 😅", next: "end" }
-                ]
-            },
-            node4: {
-                text: "Pelukanmu membuat semua masalah hilang 🤗❤️. Aku janji selalu ada untuk kamu 💖.",
-                choices: [
-                    { text: "Aku sayang kamu 😍", next: "node6" },
-                    { text: "Aku juga 💕", next: "node6" }
-                ]
-            },
-            node5: {
-                text: "Aku merasa sedikit sedih 😔, tapi aku ngerti. Aku tunggu kamu di bangku taman 🌷.",
-                choices: [
-                    { text: "Ayo mendekat 🚶‍♂️", next: "node1" },
-                    { text: "Diam dulu 🤔", next: "node7" }
-                ]
-            },
-            node6: {
-                text: "Kita duduk di bawah pohon 🌳, ngobrol tentang hal lucu 😄.",
-                choices: [
-                    { text: "Cerita lucu 🤣", next: "node8" },
-                    { text: "Cerita kenangan 🥹", next: "node9" }
-                ]
-            },
-            node7: {
-                text: "Aku menatapmu dari jauh 😢, tapi tetap tersenyum.",
-                choices: [
-                    { text: "Aku jalan ke kamu 🏃‍♂️", next: "node1" },
-                    { text: "Aku cuma geleng kepala 🙃", next: "node10" }
-                ]
-            },
-            node8: {
-                text: "Kita ketawa bareng sampai perut sakit 😂. Hati aku makin dekat sama kamu ❤️.",
-                choices: [
-                    { text: "Peluk aku 🤗", next: "node11" },
-                    { text: "Cium pipiku 😘", next: "node12" }
-                ]
-            },
-            node9: {
-                text: "Kita bernostalgia 🥹, aku jadi makin sayang sama kamu 💕.",
-                choices: [
-                    { text: "Pegang tanganku 🤝", next: "node11" },
-                    { text: "Peluk aku 🤗", next: "node12" }
-                ]
-            },
-            node10: {
-                text: "Aku sedih 😔 tapi ngerti. Aku harap nanti kamu mau dekat lagi 🌸.",
-                choices: [
-                    { text: "Mendekat 🏃‍♂️", next: "node1" },
-                    { text: "Diam aja 😶", next: "end" }
-                ]
-            },
-            node11: {
-                text: "Pelukanmu bikin aku merasa aman 🤗❤️. Aku mau kita selalu bareng 💖.",
-                choices: [
-                    { text: "Aku juga mau 😍", next: "node13" },
-                    { text: "Aku janji 💕", next: "node13" }
-                ]
-            },
-            node12: {
-                text: "Ciuman manismu 😘 bikin aku meleleh. Aku senang punya kamu 💞.",
-                choices: [
-                    { text: "Peluk lagi 🤗", next: "node13" },
-                    { text: "Ayo jalan bareng 🚶‍♂️", next: "node14" }
-                ]
-            },
-            node13: {
-                text: "Kita duduk sambil lihat matahari terbenam 🌅. Aku ingin momen ini abadi 🥰.",
-                choices: [
-                    { text: "Aku juga 🥹", next: "node15" },
-                    { text: "Aku sayang kamu 😍", next: "node15" }
-                ]
-            },
-            node14: {
-                text: "Kita berjalan sambil ngobrol manis 💕. Aku makin cinta sama kamu 😘.",
-                choices: [
-                    { text: "Peluk aku 🤗", next: "node15" },
-                    { text: "Cium pipi 😘", next: "node15" }
-                ]
-            },
-            node15: {
-                text: "Tiba-tiba hujan gerimis 🌧️, tapi kita tetap senyum.",
-                choices: [
-                    { text: "Ajak lari bareng 🏃‍♂️💨", next: "node16" },
-                    { text: "Berteduh sambil peluk 🤗", next: "node17" }
-                ]
-            },
-            node16: {
-                text: "Kita lari-lari basah tapi bahagia 😂💞. Aku senang banget sama kamu 😘.",
-                choices: [
-                    { text: "Peluk aku 🤗", next: "node18" },
-                    { text: "Cium pipi 😘", next: "node19" }
-                ]
-            },
-            node17: {
-                text: "Pelukanmu di bawah hujan 🌧️ bikin aku meleleh 🥰. Aku gak mau lepaskan kamu 💖.",
-                choices: [
-                    { text: "Aku juga sayang kamu 😍", next: "node18" },
-                    { text: "Aku janji 💕", next: "node19" }
-                ]
-            },
-            node18: {
-                text: "Setelah hujan berhenti, muncul pelangi 🌈. Kita lihat sama-sama, hati aku makin dekat sama kamu 💞.",
-                choices: [
-                    { text: "Pegang tanganku 🤝", next: "node20" },
-                    { text: "Peluk lagi 🤗", next: "node21" }
-                ]
-            },
-            node19: {
-                text: "Aku merasa lengkap saat ada kamu di sampingku 🥰. Aku mau kita selalu bareng 💖.",
-                choices: [
-                    { text: "Aku setuju 😍", next: "node20" },
-                    { text: "Aku janji 💕", next: "node21" }
-                ]
-            },
-            node20: {
-                text: "Kita duduk di bangku taman, ngobrol sambil makan es krim 🍦😄. Hati aku senang banget ❤️.",
-                choices: [
-                    { text: "Cium pipi 😘", next: "node22" },
-                    { text: "Peluk aku 🤗", next: "node23" }
-                ]
-            },
-            node21: {
-                text: "Kamu nyender di bahuku 😌💞. Aku senang banget bisa dekat sama kamu 😘.",
-                choices: [
-                    { text: "Aku juga nyaman 🥰", next: "node22" },
-                    { text: "Aku sayang kamu 😍", next: "node23" }
-                ]
-            },
-            node22: {
-                text: "Langit mulai gelap tapi kita tetap tertawa 😄🌙. Aku mau momen ini gak berakhir 💖.",
-                choices: [
-                    { text: "Aku juga mau 😘", next: "node24" },
-                    { text: "Peluk aku 🤗", next: "node25" }
-                ]
-            },
-            node23: {
-                text: "Aku merasa sangat bahagia saat kamu dekat 🥰. Aku pengen kita selalu bareng 💕.",
-                choices: [
-                    { text: "Aku janji 😍", next: "node24" },
-                    { text: "Aku juga 💖", next: "node25" }
-                ]
-            },
-            node24: {
-                text: "Malam tiba, bintang-bintang ✨ muncul. Aku bilang aku sayang kamu banget 💞.",
-                choices: [
-                    { text: "Aku juga sayang kamu 😘", next: "node26" },
-                    { text: "Peluk aku 🤗", next: "node27" }
-                ]
-            },
-            node25: {
-                text: "Kita duduk di tepi danau, lihat refleksi cahaya bulan 🌙. Hati aku meleleh 🥰.",
-                choices: [
-                    { text: "Pegang tanganku 🤝", next: "node26" },
-                    { text: "Cium pipi 😘", next: "node27" }
-                ]
-            },
-            node26: {
-                text: "Aku bilang aku mau jaga kamu selalu ❤️. Kamu tersenyum manis 😊.",
-                choices: [
-                    { text: "Aku percaya kamu 😘", next: "node28" },
-                    { text: "Aku sayang kamu 💕", next: "node28" }
-                ]
-            },
-            node27: {
-                text: "Pelukan terakhir sebelum pulang 🤗. Aku janji selalu ada buat kamu 💖.",
-                choices: [
-                    { text: "Aku juga 💞", next: "node28" },
-                    { text: "Aku sayang kamu 😘", next: "node28" }
-                ]
-            },
-            node28: {
-                text: "Kamu berjalan pulang sambil tersenyum 😄. Aku merasa bahagia banget 💕.",
-                choices: [
-                    { text: "Main lagi 🎮", next: "start" },
-                    { text: "Selesai dulu 💤", next: "end" }
-                ]
-            },
-            end: {
-                text: "Terima kasih sudah bermain ❤️. Aku harap kamu bahagia 😘. Sampai jumpa di petualangan selanjutnya 💞",
-                choices: [
-                    { text: "Main lagi 🎮", next: "start" }
-                ]
-            }
-        };
+  <div class="layout">
+    <main>
+      <!-- LOGIN -->
+      <div id="loginBox" class="card">
+        <div class="section-title"><h2>Masuk ke Curhatmu</h2></div>
+        <div class="small">Buat password singkat (disimpan hanya di perangkat ini).</div>
+        <label for="passwordInput">Password</label>
+        <input id="passwordInput" type="password" placeholder="Buat / masukkan password">
+        <div class="actions">
+          <button class="btn" onclick="login()">Masuk / Buat</button>
+          <button class="btn alt" onclick="clearAllConfirm()">Hapus Semua Data</button>
+          <button class="back-btn" onclick="window.location.href='index.html'">← Kembali ke Index</button>
+        </div>
+        <div class="hint" id="loginHint"></div>
+      </div>
 
-        const storyText = document.getElementById("storyText");
-        const buttonsDiv = document.querySelector(".buttons");
+      <!-- CURHAT PANEL -->
+      <section id="curhatPanel" class="card" style="display:none; margin-top:12px;">
+        <div class="section-title">
+          <h2>Tulis Curhat Harian</h2>
+          <div class="small">Tanggal: <span id="todayLabel"></span></div>
+        </div>
 
-        function showStory(nodeKey) {
-            const node = story[nodeKey];
-            storyText.innerText = node.text;
+        <div class="quote" id="quoteBox"></div>
 
-            buttonsDiv.innerHTML = "";
-            node.choices.forEach(choice => {
-                const btn = document.createElement("button");
-                btn.classList.add("btn");
-                btn.innerText = choice.text;
-                btn.onclick = () => showStory(choice.next);
-                buttonsDiv.appendChild(btn);
-            });
-        }
+        <div class="prompts" id="prompts"></div>
 
-        // Start the adventure
-        showStory("start");
-    </script>
+        <label for="curhatText">Isi Curhat</label>
+        <textarea id="curhatText" placeholder="Mulai menulis..."></textarea>
 
+        <div class="row">
+          <div class="col">
+            <label for="moodSelect">Mood</label>
+            <select id="moodSelect">
+              <option value="bahagia">Bahagia</option>
+              <option value="tenang">Tenang</option>
+              <option value="sedih">Sedih</option>
+              <option value="bingung">Bingung</option>
+              <option value="marah">Marah</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="dateInput">Tanggal (opsional)</label>
+            <input id="dateInput" type="date">
+          </div>
+        </div>
+
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn" onclick="saveEntry()">Simpan Curhat</button>
+          <button class="btn alt" onclick="addQuick('Aku kangen kamu')">Quick: Aku kangen</button>
+          <button class="btn alt" onclick="addQuick('Hari ini aku kuat walau berat')">Quick: Semangat</button>
+          <button class="btn alt" onclick="sendEmail()">Kirim ke Email Devi</button>
+        </div>
+
+        <hr style="margin:14px 0; border:none; border-top:1px solid #fde7f3;">
+
+        <div class="section-title">
+          <h2>Daftar Curhat</h2>
+          <div class="small">Hanya terlihat olehmu. Gunakan tombol "Izinkan Devi" untuk membagikan entri tertentu.</div>
+        </div>
+
+        <div id="entriesList"></div>
+      </section>
+    </main>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="section-title"><h2>Musik Latar</h2><div class="small">Toggle lokal</div></div>
+        <div class="music-toggle">
+          <audio id="bgMusic" src="audio/sempurna.mp3" loop></audio>
+          <button onclick="toggleMusic()" class="btn alt" id="musicToggleBtn">▶️ Putar / Pause</button>
+        </div>
+        <div class="hint" style="margin-top:8px">Musik disimpan lokal — tidak dikirimkan saat export.</div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><h2>Mood Tracker</h2><div class="small">Ringkasan mood</div></div>
+        <div id="moodStats" class="mood-stats"></div>
+        <div class="badges" id="badges"></div>
+      </div>
+    </aside>
+  </div>
+
+  <footer><small>Data disimpan hanya di perangkat ini • Tanpa server • Dibuat oleh Devi untuk Ivur</small></footer>
+</div>
+
+<button class="music-btn" id="musicFab" onclick="toggleMusic()" title="Toggle Musik">♪</button>
+
+<script>
+// ===== HELPERS =====
+function showNotif(msg, success=true){
+  const box = document.getElementById('notifBox');
+  box.innerText = msg;
+  box.style.background = success ? '#e0fff6' : '#ffeff5';
+  box.style.color = success ? '#1b7d66' : '#d8336d';
+  box.style.display = 'block';
+  setTimeout(()=>{ box.style.display='none'; }, 2500);
+}
+function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+// ===== INIT =====
+document.getElementById('todayLabel').innerText = new Date().toLocaleDateString();
+const PROMPTS=["Hari ini aku lagi mikirin...","Hal kecil yang bikin aku senyum hari ini adalah...","Ada sesuatu yang bikin aku sedih/kecewa: ...","Satu hal yang membuatku bangga hari ini: ...","Kalau aku harus cerita rahasiaku hari ini, itu tentang...","Sebelum tidur, yang aku rasakan adalah..."];
+const QUOTES=["Nulis itu cara hati bernapas. Mulai aja, gak harus sempurna.","Kamu sudah berusaha. Itu penting—dan layak diakui.","Pelan-pelan. Setiap kata sedikit membantu merapikan hari.","Tidak apa-apa lelah. Nulis itu bentuk berani untuk jujur pada diri sendiri.","Kamu penting. Cerita kamu berarti."];
+
+function renderPrompts(){ const p=document.getElementById('prompts'); p.innerHTML=''; PROMPTS.forEach(t=>{ const div=document.createElement('div'); div.className='prompt'; div.innerText=t; div.onclick=()=>{ const ta=document.getElementById('curhatText'); ta.value = ta.value? ta.value+'\n\n'+t : t; ta.focus(); }; p.appendChild(div); }); }
+function setRandomQuote(){ document.getElementById('quoteBox').innerText = QUOTES[Math.floor(Math.random()*QUOTES.length)]; }
+
+// ===== MUSIC =====
+let musicPlaying=false;
+function toggleMusic(){ const aud=document.getElementById('bgMusic'); const btn=document.getElementById('musicToggleBtn'); const fab=document.getElementById('musicFab'); if(!musicPlaying){ aud.play().catch(()=>{}); musicPlaying=true; if(btn)btn.textContent='⏸️ Pause'; if(fab)fab.textContent='⏸'; } else{ aud.pause(); musicPlaying=false; if(btn)btn.textContent='▶️ Putar / Pause'; if(fab)fab.textContent='♪'; } }
+
+// ===== STORAGE =====
+const NAME="Ivur";
+const PASS_KEY=`curhat_pass_${NAME}`;
+const ENTRIES_KEY=`curhat_entries_${NAME}`;
+function readEntries(){ const raw=localStorage.getItem(ENTRIES_KEY); return raw?JSON.parse(raw):[]; }
+function writeEntries(arr){ localStorage.setItem(ENTRIES_KEY, JSON.stringify(arr)); }
+
+// ===== LOGIN =====
+window.addEventListener('load', ()=>{
+  renderPrompts();
+  setRandomQuote();
+  const hint = document.getElementById('loginHint');
+  hint.innerText = localStorage.getItem(PASS_KEY)? 'Password sudah ada. Masukkan untuk membuka curhatmu.' : 'Belum ada password — buat password baru untuk menyimpan curhat.';
+  renderMoodStats();
+  renderBadges();
+});
+
+function login(){
+  const val=document.getElementById('passwordInput').value.trim();
+  if(!val){ showNotif('Masukkan password singkat', false); return; }
+  const stored=localStorage.getItem(PASS_KEY);
+  if(stored && stored!==val){ showNotif('Password salah!', false); return; }
+  if(!stored){ localStorage.setItem(PASS_KEY,val); showNotif('Password tersimpan!'); }
+  document.getElementById('loginBox').style.display='none';
+  document.getElementById('curhatPanel').style.display='block';
+  renderEntries();
+}
+
+// ===== CURHAT =====
+function saveEntry(){
+  const text=document.getElementById('curhatText').value.trim();
+  if(!text){ showNotif('Isi curhat dulu', false); return; }
+  const mood=document.getElementById('moodSelect').value;
+  let date=document.getElementById('dateInput').value; if(!date)date=new Date().toISOString().split('T')[0];
+  const entry={text, mood, date, allow:false};
+  const arr=readEntries(); arr.unshift(entry); writeEntries(arr);
+  document.getElementById('curhatText').value=''; renderEntries(); renderMoodStats(); showNotif('Curhat tersimpan!');
+}
+function renderEntries(){
+  const list=document.getElementById('entriesList'); list.innerHTML='';
+  const arr=readEntries();
+  arr.forEach((e,i)=>{
+    const div=document.createElement('div'); div.className='entry';
+    div.innerHTML=`
+      <div class="meta"><div><strong>${capitalize(e.mood)}</strong> • <span class="small-muted">${e.date}</span></div>
+        <div class="control-row">
+          <button class="lock-btn" onclick="toggleAllow(${i})">${e.allow?'✅ Izinkan Devi':'🔒 Izinkan Devi'}</button>
+          <button class="delete-btn" onclick="deleteEntry(${i})">🗑 Hapus</button>
+        </div>
+      </div>
+      <div class="text">${escapeHtml(e.text)}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+function toggleAllow(idx){
+  const arr=readEntries(); arr[idx].allow=!arr[idx].allow; writeEntries(arr); renderEntries();
+}
+function deleteEntry(idx){ const arr=readEntries(); arr.splice(idx,1); writeEntries(arr); renderEntries(); renderMoodStats(); renderBadges(); }
+function addQuick(txt){ const ta=document.getElementById('curhatText'); ta.value = ta.value? ta.value+'\n'+txt : txt; ta.focus(); }
+
+// ===== EXPORT / EMAIL =====
+function sendEmail(){
+  const entries=readEntries().filter(e=>e.allow);
+  if(entries.length===0){ showNotif('Belum ada curhat yang diizinkan', false); return; }
+  const content=entries.map(e=>`[${e.date}] (${e.mood})\n${e.text}`).join('\n\n');
+  const mailtoLink=`mailto:barrudevi803@gmail.com.com?subject=Curhat dari Ivur&body=${encodeURIComponent(content)}`;
+  window.location.href=mailtoLink;
+}
+
+// ===== MOOD STATS =====
+function renderMoodStats(){
+  const arr=readEntries();
+  const stats={}; arr.forEach(e=>stats[e.mood]=(stats[e.mood]||0)+1);
+  const container=document.getElementById('moodStats'); container.innerHTML='';
+  Object.keys(stats).forEach(k=>{
+    const span=document.createElement('span'); span.className='pill'; span.innerText=`${capitalize(k)}: ${stats[k]}`;
+    container.appendChild(span);
+  });
+}
+
+// ===== BADGES =====
+function renderBadges(){
+  const arr=readEntries(); const container=document.getElementById('badges'); container.innerHTML='';
+  if(arr.length>=5)container.innerHTML+='<span class="badge">5 Curhat ✅</span>';
+  if(arr.length>=10)container.innerHTML+='<span class="badge">10 Curhat ✅</span>';
+}
+
+// ===== CLEAR ALL =====
+function clearAllConfirm(){ if(confirm('Hapus semua curhat dan password?')){ localStorage.removeItem(PASS_KEY); localStorage.removeItem(ENTRIES_KEY); location.reload(); } }
+</script>
 </body>
 </html>

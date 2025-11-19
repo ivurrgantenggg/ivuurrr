@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Curhat Box — Ivur & Devi</title>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(180deg,#fff8fb 0%, #fff2f7 100%);
+    color:#2b2b2b;
+    margin:0; padding:16px;
+  }
+  .container { max-width:900px; margin:auto; }
+  h1 { font-size:1.3rem; margin-bottom:8px; }
+  .card { background:#fff; border-radius:12px; padding:14px; margin-bottom:12px; box-shadow:0 8px 20px rgba(0,0,0,0.06); }
+  input, textarea, select, button { font-family:inherit; }
+  input, textarea, select { width:100%; padding:10px; margin-top:6px; border-radius:10px; border:1px solid #efe6ef; }
+  textarea { resize:vertical; min-height:120px; }
+  button { padding:10px 12px; border-radius:10px; border:none; background:#ff6fa2; color:#fff; cursor:pointer; margin-top:8px; }
+  .btn-alt { background:#fff; color:#333; border:1px solid #efe6ef; }
+  .entry { background:linear-gradient(180deg,#fff,#fff9fb); border:1px solid #fde7f5; border-radius:10px; padding:10px; margin-bottom:10px; }
+  .entry-header { display:flex; justify-content:space-between; font-size:0.85rem; color:#7a6e7a; margin-bottom:6px; }
+  .allowed { background:#d5fdd5; border-color:#a2e6a2; }
+  .locked { background:#fef0f5; border-color:#f5c2d0; }
+  .message-box { margin-top:8px; padding:10px; border-radius:10px; color:#fff; display:none; }
+  .msg-success { background:#4caf50; }
+  .msg-error { background:#f44336; }
+  .back-btn { margin-bottom:12px; display:inline-block; color:#ff6fa2; text-decoration:none; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="index.html" class="back-btn">⬅️ Kembali ke Index</a>
+
+  <h1>Curhat Box — Ivur & Devi</h1>
+
+  <!-- Message box -->
+  <div id="msgBox" class="message-box"></div>
+
+  <!-- Curhat Form -->
+  <div class="card">
+    <label>Password:</label>
+    <input type="password" id="passwordInput" placeholder="Buat / masukkan password">
+    
+    <label>Curhat:</label>
+    <textarea id="curhatText" placeholder="Tulis curhatmu di sini..."></textarea>
+    
+    <label>Mood:</label>
+    <select id="moodSelect">
+      <option value="bahagia">Bahagia</option>
+      <option value="tenang">Tenang</option>
+      <option value="sedih">Sedih</option>
+      <option value="bingung">Bingung</option>
+      <option value="marah">Marah</option>
+    </select>
+
+    <label>
+      <input type="checkbox" id="allowDevi"> Izinkan Devi membaca
+    </label>
+
+    <button onclick="saveEntry()">💌 Simpan Curhat</button>
+  </div>
+
+  <!-- Curhat List -->
+  <div class="card">
+    <h2>Curhat yang Diizinkan</h2>
+    <div id="entriesList">
+      <p class="small-muted">Belum ada curhat yang diizinkan.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const NAME = "Ivur";
+const PASS_KEY = `curhat_pass_${NAME}`;
+const ENTRIES_KEY = `curhat_entries_${NAME}`;
+
+const msgBox = document.getElementById('msgBox');
+
+function showMessage(msg,type='success'){
+  msgBox.innerText = msg;
+  msgBox.className = 'message-box ' + (type==='success' ? 'msg-success' : 'msg-error');
+  msgBox.style.display = 'block';
+  setTimeout(()=>{ msgBox.style.display='none'; }, 3000);
+}
+
+function readEntries(){ 
+  const raw = localStorage.getItem(ENTRIES_KEY); 
+  return raw ? JSON.parse(raw) : []; 
+}
+function writeEntries(arr){ localStorage.setItem(ENTRIES_KEY, JSON.stringify(arr)); }
+
+function saveEntry(){
+  const pass = document.getElementById('passwordInput').value.trim();
+  if(!pass){ showMessage('Masukkan password dulu!', 'error'); return; }
+
+  if(localStorage.getItem(PASS_KEY) === null){
+    localStorage.setItem(PASS_KEY, pass);
+  } else if(localStorage.getItem(PASS_KEY) !== pass){
+    showMessage('Password salah!', 'error'); return;
+  }
+
+  const text = document.getElementById('curhatText').value.trim();
+  if(!text){ showMessage('Tulis sesuatu dulu!', 'error'); return; }
+
+  const mood = document.getElementById('moodSelect').value;
+  const allow = document.getElementById('allowDevi').checked;
+  const id = Date.now();
+  const entries = readEntries();
+  entries.unshift({id, mood, text, allowed:allow});
+  writeEntries(entries);
+
+  document.getElementById('curhatText').value = '';
+  document.getElementById('allowDevi').checked = false;
+
+  showMessage('Curhat tersimpan 💌', 'success');
+  renderEntries();
+}
+
+function renderEntries(){
+  const container = document.getElementById('entriesList');
+  const entries = readEntries().filter(e=>e.allowed);
+  if(entries.length === 0){
+    container.innerHTML = '<p class="small-muted">Belum ada curhat yang diizinkan.</p>';
+    return;
+  }
+  container.innerHTML = '';
+  entries.forEach(e=>{
+    const div = document.createElement('div');
+    div.className = 'entry allowed';
+    div.innerHTML = `<div class="entry-header">Mood: ${capitalize(e.mood)}</div>
+                     <div>${escapeHtml(e.text)}</div>`;
+    container.appendChild(div);
+  });
+}
+
+function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+window.addEventListener('load', renderEntries);
+</script>
+</body>
+</html>

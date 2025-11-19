@@ -8,8 +8,15 @@
 </head>
 <body>
 
-    <!-- Musik Background -->
-    <iframe width="0" height="0" src="https://www.youtube.com/embed/kygrxgKPLCo?autoplay=1&loop=1&playlist=kygrxgKPLCo" frameborder="0" allow="autoplay"></iframe>
+<audio id="backgroundMusic" src="audio/sempurna.mp3" loop></audio>
+<button class="btn" onclick="startMusic()">▶️ Putar Musik</button>
+
+<script>
+function startMusic() {
+    const music = document.getElementById("backgroundMusic");
+    music.play();
+}
+</script>
 
     <div class="container">
 

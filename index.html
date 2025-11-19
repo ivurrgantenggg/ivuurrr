@@ -10,11 +10,11 @@
   <!-- Particle hearts container -->
   <div id="hearts"></div>
 
-  <!-- Audio: pakai file lokal audio/sempurna.mp3 jika ada.
-       Atau uncomment iframe YouTube dan masukkan VIDEO_ID YouTube Sempurna -->
-  <audio id="bgMusic" src="audio/sempurna.mp3" loop></audio>
-  <!-- Jika mau embed YouTube: -->
-  <!-- <iframe id="ytEmbed" width="0" height="0" src="https://www.youtube.com/embed/VIDEO_ID?autoplay=1&loop=1&playlist=VIDEO_ID" frameborder="0" allow="autoplay; encrypted-media"></iframe> -->
+  <!-- Audio -->
+  <audio id="backgroundMusic" src="audio/sempurna.mp3" loop></audio>
+
+  <!-- Tombol Musik -->
+  <button id="musicToggle" class="music-btn">▶️ Putar Musik</button>
 
   <main class="wrap">
     <header>
@@ -24,51 +24,52 @@
 
     <nav class="menu">
       <a class="card" href="kata.html">💌 Kata-Kata buat ivur^.^</a>
-      <a class="card" href="game.html">🎮 Mini Game</a>
+      <a class="card" href="game.html">💌 Cerita disini</a>
       <a class="card" href="rahasiaa.html">🔐 Pesan Rahasia</a>
     </nav>
 
     <footer class="credits">
       <p>Semoga kamu suka ya ganteng ^-^</p>
     </footer>
-
-    <button id="musicToggle" class="music-btn">▶️ Putar Musik</button>
   </main>
 
+  <!-- SCRIPT -->
   <script>
-    // Particle hearts (simple)
+    /* ======== PARTIKEL HATI ======== */
     const hearts = document.getElementById('hearts');
-    function spawnHeart(){
+    function spawnHeart() {
       const h = document.createElement('div');
       h.className = 'heart';
       h.style.left = Math.random() * 100 + 'vw';
-      h.style.animationDuration = 4 + Math.random()*3 + 's';
+      h.style.animationDuration = 4 + Math.random() * 3 + 's';
       hearts.appendChild(h);
-      setTimeout(()=> h.remove(), 8000);
+      setTimeout(() => h.remove(), 8000);
     }
     setInterval(spawnHeart, 700);
 
-    // Music toggle
-    const bg = document.getElementById('bgMusic');
-    const btn = document.getElementById('musicToggle');
+    /* ======== MUSIK ======== */
+    const bg = document.getElementById("backgroundMusic");
+    const btn = document.getElementById("musicToggle");
     let playing = false;
+
+    // Tekan Tombol
     btn.onclick = () => {
       if (!playing) {
-        bg.play().catch(()=>{}); // may be blocked until user interacts
-        btn.textContent = '⏸️ Pause Musik';
+        bg.play().catch(err => console.log("Gagal play:", err));
+        btn.textContent = "⏸️ Pause Musik";
         playing = true;
       } else {
         bg.pause();
-        btn.textContent = '▶️ Putar Musik';
+        btn.textContent = "▶️ Putar Musik";
         playing = false;
       }
     };
 
-    // Try autoplay once (browsers may block until user interaction)
-    window.addEventListener('click', ()=> {
+    // Autoplay setelah user tap layar pertama kali
+    window.addEventListener("click", () => {
       if (!playing) {
         bg.play().catch(()=>{});
-        btn.textContent = '⏸️ Pause Musik';
+        btn.textContent = "⏸️ Pause Musik";
         playing = true;
       }
     }, { once: true });

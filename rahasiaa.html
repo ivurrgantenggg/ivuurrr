@@ -11,7 +11,7 @@
 <div class="container">
     <h1 class="title">Puzzle Kata Cinta 💞</h1>
 
-    <p class="instruction">Susun kata-kata ini supaya jadi kalimat manis untuk aku 😘</p>
+    <p class="instruction">Susun kata-kata ini😘</p>
 
     <div id="puzzleArea" class="puzzle-area"></div>
 
@@ -26,26 +26,26 @@
 <script>
 // List banyak kalimat romantis (emoji di akhir)
 const sentences = [
-    "Aku selalu ingin dekat dengan kamu 😘",
-    "Kamu bikin hari-hariku lebih indah 💖",
+    "Maaf ya kalo aku selalu overtingking 😘",
+    "Terimakasih yaa Kamu bikin hari-hariku lebih indah 💖",
     "Setiap detik bersamamu berharga 🥰",
-    "Aku nggak bisa berhenti mikirin kamu 💕",
-    "Senymu bikin hatiku meleleh 🥹",
-    "Pelukanmu membuat aku tenang 😌",
+    "maaf kalo aku terlalu berlebihan 💕",
+    "kamu jangan capek ya sama aaku 🥹",
+    "Aku berharap kita tidak pernaah berubah 😌",
     "Aku ingin selalu jaga kamu 💞",
-    "Kamu itu hadiah terindah dalam hidupku 🎁",
+    "terimakasih karena jadi hadiah terindah dalam hidupku 🎁",
     "Aku mau kita selalu bareng selamanya 🌸",
-    "Kamu bikin aku tertawa setiap hari 😂",
+    "Kamu bikin aku ngga berhenti mikirin kamu 😂",
     "Aku sayang kamu lebih dari kata-kata ❤️",
     "Bersamamu aku merasa lengkap 🥰",
     "Aku kangen kamu tiap waktu ⏰",
     "Momen bersamamu selalu spesial ✨",
-    "Aku ingin memelukmu terus 🤗",
-    "Kamu selalu di hatiku 💖",
-    "Aku janji selalu ada buat kamu 💕",
-    "Cintaku padamu nggak akan pernah hilang 🥰",
+    "Aku harap kamu bahagia sama aku 🤗",
+    "Kalo kamu marah jangan diamin aku ya, aku takut 💖",
+    "kalo ada yang kamu ga suka dari aku ngomong yaaa 💕",
+    "jujur aku sayang kamu 🥰",
     "Setiap senyummu bikin aku bahagia 😄",
-    "Kamu cahaya dalam hidupku 🌟"
+    "Maaf kalo aku selalu takut kamu ninggalin aku 🌟"
 ];
 
 // Ambil kalimat random
@@ -73,6 +73,9 @@ function renderPuzzle() {
         puzzleArea.appendChild(span);
     });
     result.innerText = "";
+    // Hapus pesan akhir lama kalau ada
+    const oldPesan = document.querySelector(".akhirPesan");
+    if(oldPesan) oldPesan.remove();
 }
 
 // Drag & Drop
@@ -95,15 +98,16 @@ function drop(e) {
 // Cek jawaban
 checkBtn.addEventListener("click", () => {
     if(shuffledWords.join(" ") === words.join(" ")) {
-        result.innerText = "💖 Tepat! Kamu bikin aku baper 😘";
+        result.innerText = "💖 Tepat! Kamuuuu hebaaaaaat 😘";
         result.style.color = "#ff2d75";
-        // Ambil kalimat baru setelah berhasil
+
+        // Ambil kalimat baru untuk puzzle
         currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
         words = currentSentence.split(" ");
         shuffledWords = [...words].sort(() => Math.random() - 0.5);
-        setTimeout(renderPuzzle, 1500); // otomatis ganti puzzle baru
+        setTimeout(renderPuzzle, 3500); // otomatis ganti puzzle baru
     } else {
-        result.innerText = "Ups 😅, coba lagi!";
+        result.innerText = "Ups kamu salah😅, coba lagi sayang!";
         result.style.color = "#ff5fa8";
     }
 });
