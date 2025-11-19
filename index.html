@@ -13,9 +13,6 @@
   <!-- Audio -->
   <audio id="backgroundMusic" src="audio/sempurna.mp3" loop></audio>
 
-  <!-- Tombol Musik -->
-  <button id="musicToggle" class="music-btn">▶️ Putar Musik</button>
-
   <main class="wrap">
     <header>
       <h1>Untuk Kamu yang Sempurna ✨</h1>
@@ -24,7 +21,7 @@
 
     <nav class="menu">
       <a class="card" href="kata.html">💌 Kata-Kata buat ivur^.^</a>
-      <a class="card" href="game.html">💌 Cerita disini</a>
+      <a class="card" href="game.html">💌Cerita disini</a>
       <a class="card" href="rahasiaa.html">🔐 Pesan Rahasia</a>
     </nav>
 
@@ -47,32 +44,6 @@
     }
     setInterval(spawnHeart, 700);
 
-    /* ======== MUSIK ======== */
-    const bg = document.getElementById("backgroundMusic");
-    const btn = document.getElementById("musicToggle");
-    let playing = false;
-
-    // Tekan Tombol
-    btn.onclick = () => {
-      if (!playing) {
-        bg.play().catch(err => console.log("Gagal play:", err));
-        btn.textContent = "⏸️ Pause Musik";
-        playing = true;
-      } else {
-        bg.pause();
-        btn.textContent = "▶️ Putar Musik";
-        playing = false;
-      }
-    };
-
-    // Autoplay setelah user tap layar pertama kali
-    window.addEventListener("click", () => {
-      if (!playing) {
-        bg.play().catch(()=>{});
-        btn.textContent = "⏸️ Pause Musik";
-        playing = true;
-      }
-    }, { once: true });
   </script>
 </body>
 </html>

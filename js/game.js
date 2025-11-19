@@ -48,25 +48,6 @@ function setRandomQuote(){
   document.getElementById('quoteBox').innerText = QUOTES[Math.floor(Math.random()*QUOTES.length)]; 
 }
 
-// ===== MUSIC =====
-let musicPlaying=false;
-function toggleMusic(){ 
-  const aud=document.getElementById('bgMusic'); 
-  const btn=document.getElementById('musicToggleBtn'); 
-  const fab=document.getElementById('musicFab'); 
-  if(!musicPlaying){ 
-    aud.play().catch(()=>{}); 
-    musicPlaying=true; 
-    if(btn) btn.textContent='⏸️ Pause'; 
-    if(fab) fab.textContent='⏸'; 
-  } else{ 
-    aud.pause(); 
-    musicPlaying=false; 
-    if(btn) btn.textContent='▶️ Putar / Pause'; 
-    if(fab) fab.textContent='♪'; 
-  } 
-}
-
 // ===== STORAGE =====
 const NAME="Ivur";
 const PASS_KEY=`curhat_pass_${NAME}`;
@@ -173,13 +154,13 @@ function renderBadges(){
   const arr=readEntries(); 
   const container=document.getElementById('badges'); 
   container.innerHTML='';
-  if(arr.length>=5) container.innerHTML+='<span class="badge">5 Curhat ✅</span>';
-  if(arr.length>=10) container.innerHTML+='<span class="badge">10 Curhat ✅</span>';
+  if(arr.length>=5) container.innerHTML+='<span class="badge">5 Cerits ✅</span>';
+  if(arr.length>=10) container.innerHTML+='<span class="badge">10 cerita ✅</span>';
 }
 
 // ===== CLEAR ALL =====
 function clearAllConfirm(){ 
-  if(confirm('Hapus semua curhat dan password?')){
+  if(confirm('Hapus semua curita dan password?')){
     localStorage.removeItem(PASS_KEY); 
     localStorage.removeItem(ENTRIES_KEY); 
     location.reload(); 
